@@ -22,13 +22,6 @@ pipeline {
             }
         }
 
-        stage('Load Images Into Minikube') {
-            steps {
-                bat 'minikube image load cloud-native-task-platform-backend'
-                bat 'minikube image load cloud-native-task-platform-frontend'
-            }
-        }
-
         stage('Deploy To Kubernetes') {
             steps {
 
