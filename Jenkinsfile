@@ -10,21 +10,54 @@ pipeline {
             }
         }
 
-        stage('Build Containers') {
+        stage('Build Backend Image') {
             steps {
-                bat 'docker compose build'
+                bat 'docker build -t cloud-native-task-platform-backend ./backend'
             }
         }
 
-        stage('Start Containers') {
+        stage('Build Frontend Image') {
             steps {
-                bat 'docker compose up -d'
+                bat 'docker build -t cloud-native-task-platform-frontend ./frontend'
             }
         }
 
-        stage('Show Running Containers') {
+        stage('Load Images Into Minikube') {
             steps {
-                bat 'docker ps'
+                bat 'minikube image load cloud-native-task-platform-backend'
+                bat 'minikube image load cloud-native-task-platform-frontend'
+            }
+        }
+
+        stage('Deploy To Kubernetes') {
+            steps {
+
+                bat 'kubectl apply -f k8s/mongodb-pvc.yaml'
+
+                bat 'kubectl apply -f k8s/mongodb-deployment.yaml'
+                bat 'kubectl apply -f k8s/mongodb-service.yaml'
+
+                bat 'kubectl apply -f k8s/backend-configmap.yaml'
+
+                bat 'kubectl apply -f k8s/backend-deployment.yaml'
+                bat 'kubectl apply -f k8s/backend-service.yaml'
+
+                bat 'kubectl apply -f k8s/frontend-deployment.yaml'
+                bat 'kubectl apply -f k8s/frontend-service.yaml'
+            }
+        }
+
+        stage('Restart Deployments') {
+            steps {
+                bat 'kubectl rollout restart deployment backend-deployment'
+                bat 'kubectl rollout restart deployment frontend-deployment'
+            }
+        }
+
+        stage('Show Kubernetes Resources') {
+            steps {
+                bat 'kubectl get pods'
+                bat 'kubectl get services'
             }
         }
     }
