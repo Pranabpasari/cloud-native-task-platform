@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        KUBECONFIG = 'C:\\Users\\prana\\.kube\\config'
+    }
+
     stages {
 
         stage('Clone Repository') {
