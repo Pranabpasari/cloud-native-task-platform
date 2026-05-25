@@ -6,7 +6,7 @@ function App() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = "";
 
   const fetchTasks = async () => {
     try {
