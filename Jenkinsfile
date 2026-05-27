@@ -16,13 +16,13 @@ pipeline {
 
         stage('Build Backend Image') {
             steps {
-                bat 'docker build -t cloud-native-task-platform-backend ./backend'
+                bat 'docker build --no-cache -t cloud-native-task-platform-backend ./backend'
             }
         }
 
         stage('Build Frontend Image') {
             steps {
-                bat 'docker build -t cloud-native-task-platform-frontend ./frontend'
+                bat 'docker build --no-cache -t cloud-native-task-platform-frontend ./frontend'
             }
         }
 
