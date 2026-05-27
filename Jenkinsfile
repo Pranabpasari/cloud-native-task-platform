@@ -14,6 +14,15 @@ pipeline {
             }
         }
 
+        stage('Connect To Minikube Docker') {
+            steps {
+                bat '''
+                @FOR /f "tokens=*" %%i IN ('minikube -p minikube docker-env --shell cmd') DO @%%i
+                docker info
+                '''
+            }
+        }
+
         stage('Build Backend Image') {
             steps {
                 bat 'docker build --no-cache -t cloud-native-task-platform-backend ./backend'
