@@ -21,7 +21,7 @@ spec:
       containers:
         - name: backend
 
-          image: cloud-native-task-platform-backend
+          image: cloud-native-task-platform-backend:v2
 
           imagePullPolicy: Never
 

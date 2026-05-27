@@ -106,8 +106,7 @@ function App() {
         <p>
           Dockerized full-stack DevOps project using
           React, Node.js, MongoDB, Kubernetes,
-          Jenkins, Terraform, AWS, Prometheus
-          and Grafana.
+          Jenkins, Prometheus and Grafana.
         </p>
 
       </section>
