@@ -14,24 +14,29 @@ pipeline {
             }
         }
 
-        stage('Connect To Minikube Docker') {
+        stage('Docker Hub Login') {
             steps {
-                bat '''
-                @FOR /f "tokens=*" %%i IN ('minikube -p minikube docker-env --shell cmd') DO @%%i
-                docker info
-                '''
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                bat 'echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
+                }
             }
         }
 
         stage('Build Backend Image') {
             steps {
-                bat 'docker build --no-cache -t cloud-native-task-platform-backend ./backend'
+                bat 'docker build --no-cache -t pranab4/cloud-native-task-platform-backend:latest ./backend'
+                bat 'docker push pranab4/cloud-native-task-platform-backend:latest'
             }
         }
 
         stage('Build Frontend Image') {
             steps {
-                bat 'docker build --no-cache -t cloud-native-task-platform-frontend ./frontend'
+                bat 'docker build --no-cache -t pranab4/cloud-native-task-platform-frontend:latest ./frontend'
+                bat 'docker push pranab4/cloud-native-task-platform-frontend:latest'
             }
         }
 
@@ -55,8 +60,8 @@ pipeline {
 
         stage('Restart Deployments') {
             steps {
-                bat 'kubectl set env deployment/frontend-deployment BUILD_TIMESTAMP=%BUILD_NUMBER%'
-                bat 'kubectl set env deployment/backend-deployment BUILD_TIMESTAMP=%BUILD_NUMBER%'
+                bat 'kubectl rollout restart deployment backend-deployment'
+                bat 'kubectl rollout restart deployment frontend-deployment'
             }
         }
 
