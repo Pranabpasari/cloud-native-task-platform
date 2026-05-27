@@ -14,17 +14,24 @@ pipeline {
             }
         }
 
+        stage('Connect To Minikube Docker') {
+            steps {
+                bat '''
+                @FOR /f "tokens=*" %%i IN ('minikube -p minikube docker-env --shell cmd') DO @%%i
+                docker info
+                '''
+            }
+        }
+
         stage('Build Backend Image') {
             steps {
-                bat 'docker build --no-cache -t pranab4/cloud-native-task-platform-backend:latest ./backend'
-                bat 'docker push pranab4/cloud-native-task-platform-backend:latest'
+                bat 'docker build --no-cache -t cloud-native-task-platform-backend ./backend'
             }
         }
 
         stage('Build Frontend Image') {
             steps {
-                bat 'docker build --no-cache -t pranab4/cloud-native-task-platform-frontend:latest ./frontend'
-                bat 'docker push pranab4/cloud-native-task-platform-frontend:latest'
+                bat 'docker build --no-cache -t cloud-native-task-platform-frontend ./frontend'
             }
         }
 
@@ -48,8 +55,8 @@ pipeline {
 
         stage('Restart Deployments') {
             steps {
-                bat 'kubectl rollout restart deployment backend-deployment'
-                bat 'kubectl rollout restart deployment frontend-deployment'
+                bat 'kubectl set env deployment/frontend-deployment BUILD_TIMESTAMP=%BUILD_NUMBER%'
+                bat 'kubectl set env deployment/backend-deployment BUILD_TIMESTAMP=%BUILD_NUMBER%'
             }
         }
 

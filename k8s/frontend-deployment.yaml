@@ -21,9 +21,9 @@ spec:
       containers:
         - name: frontend
 
-          image: pranab4/cloud-native-task-platform-frontend:latest
+          image: cloud-native-task-platform-frontend
 
-          imagePullPolicy: Always
+          imagePullPolicy: Never
 
           ports:
             - containerPort: 5173
