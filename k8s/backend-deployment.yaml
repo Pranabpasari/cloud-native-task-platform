@@ -21,9 +21,9 @@ spec:
       containers:
         - name: backend
 
-          image: cloud-native-task-platform-backend:v2
+          image: pranab4/cloud-native-task-platform-backend:latest
 
-          imagePullPolicy: Never
+          imagePullPolicy: Always
 
           ports:
             - containerPort: 5000
