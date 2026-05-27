@@ -21,7 +21,10 @@ pipeline {
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
-                bat 'echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
+                    
+                    writeFile file: 'docker-pass.txt', text: DOCKER_PASS
+
+                    bat 'type docker-pass.txt | docker login -u %DOCKER_USER% --password-stdin'
                 }
             }
         }
