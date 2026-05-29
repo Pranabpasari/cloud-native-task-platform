@@ -101,7 +101,7 @@ function App() {
 
       <section className="hero">
 
-        <h1>Cloud Native Task Management Platform</h1>
+        <h1>Cloud - Native Task Management Platform</h1>
 
         <p>
           Dockerized full-stack DevOps project using
